@@ -15,126 +15,232 @@
         <v-icon>add</v-icon>
       </v-btn>
     </v-toolbar>
+      <v-dialog v-model="dialog">
+        <v-card>
+          <v-card-title>
+            <span class="headline">{{ formTitle }}</span>
+          </v-card-title>
 
-    <v-dialog v-model="dialog">
-      <v-card>
-        <v-card-title>
-          <span class="headline">Ajout</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container grid-list-md>
-            <v-flex xs12 sm6>
-              <v-text-field label="Nom de la tâche" required></v-text-field>
-              <v-menu
-              :close-on-content-click="false"
-              v-model="menu2"
-              :nudge-right="40"
-              lazy
-              transition="scale-transition"
-              offset-y
-              full-width
-              max-width="290px"
-              min-width="290px"
-            >
-            <v-text-field
-              slot="activator"
-              v-model="computedDateFormatted"
-              label="Date"
-              hint="DD/MM/YYYY format"
-              persistent-hint
-              prepend-icon="event"
-              readonly
-              required
-            ></v-text-field>
-            <v-date-picker v-model="date" no-title @input="menu2 = false"></v-date-picker>
-            </v-menu>
-            </v-flex>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue" flat @click.native="dialog = false">Close</v-btn>
-          <v-btn color="blue" flat @click.native="dialog = false">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-toolbar>
     <v-data-table
-    :headers="headers"
-    :items="desserts"
-    hide-actions
-    headers-length="3"
-  >
-    <template slot="items" slot-scope="props">
-      <td>{{ props.items.name }}</td>
-      <td class="text-xs-right">{{ props.items.date }}</td>
-      <td class="text-xs-right">{{ props.items.action }}</td>
-    </template>
-    <template slot="no-data">
-      <v-alert :value="true" color="error" icon="warning">
-        Il n'y a rien dans cette table !!
-      </v-alert>
-    </template>
-  </v-data-table>
+      :headers="headers"
+      :items="desserts"
+      hide-actions
+      class="elevation-1"
+    >
+      <template slot="items" slot-scope="props">
+        <td>{{ props.item.name }}</td>
+        <td class="text-xs-right">{{ props.item.calories }}</td>
+        <td class="text-xs-right">{{ props.item.fat }}</td>
+        <td class="text-xs-right">{{ props.item.carbs }}</td>
+        <td class="text-xs-right">{{ props.item.protein }}</td>
+        <td class="justify-center layout px-0">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(props.item)"
+          >
+            edit
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(props.item)"
+          >
+            delete
+          </v-icon>
+        </td>
+      </template>
+      <template slot="no-data">
+        <v-btn color="primary" @click="initialize">Reset</v-btn>
+      </template>
+    </v-data-table>
   </v-app>
 </template>
 
 <script>
   export default {
-    data() {
-      return {
-         headers: [
-          {
-            text: 'Tâche',
-            align: 'left',
-            sortable: false,
-            value: 'name'
-          },
-          { text: 'Date', value: 'date' },
-          { text: 'Action', value: 'action' },
-        ],
-        desserts: [
-          {
-            value: false,
-            name: 'GX',
-            date: 36,
-            action: 6,
-          },
-        ],
-        dialog : false,
-        picker : null,
-        date: null,
-        dateFormatted: null,
-        menu2: false,
-      };
-    },
+    data: () => ({
+      dialog: false,
+      headers: [
+        {
+          text: 'Dessert (100g serving)',
+          align: 'left',
+          sortable: false,
+          value: 'name'
+        },
+        { text: 'Calories', value: 'calories' },
+        { text: 'Fat (g)', value: 'fat' },
+        { text: 'Carbs (g)', value: 'carbs' },
+        { text: 'Protein (g)', value: 'protein' },
+        { text: 'Actions', value: 'name', sortable: false }
+      ],
+      desserts: [],
+      editedIndex: -1,
+      editedItem: {
+        name: '',
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0
+      },
+      defaultItem: {
+        name: '',
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0
+      }
+    }),
+
     computed: {
-      computedDateFormatted () {
-        return this.formatDate(this.date)
+      formTitle () {
+        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
       }
     },
 
     watch: {
-      date (val) {
-        this.dateFormatted = this.formatDate(this.date)
+      dialog (val) {
+        val || this.close()
       }
+    },
+
+    created () {
+      this.initialize()
     },
 
     methods: {
-      formatDate (date) {
-        if (!date) return null
-
-        const [year, month, day] = date.split('-')
-        return `${day}/${month}/${year}`
+      initialize () {
+        this.desserts = [
+          {
+            name: 'Frozen Yogurt',
+            calories: 159,
+            fat: 6.0,
+            carbs: 24,
+            protein: 4.0
+          },
+          {
+            name: 'Ice cream sandwich',
+            calories: 237,
+            fat: 9.0,
+            carbs: 37,
+            protein: 4.3
+          },
+          {
+            name: 'Eclair',
+            calories: 262,
+            fat: 16.0,
+            carbs: 23,
+            protein: 6.0
+          },
+          {
+            name: 'Cupcake',
+            calories: 305,
+            fat: 3.7,
+            carbs: 67,
+            protein: 4.3
+          },
+          {
+            name: 'Gingerbread',
+            calories: 356,
+            fat: 16.0,
+            carbs: 49,
+            protein: 3.9
+          },
+          {
+            name: 'Jelly bean',
+            calories: 375,
+            fat: 0.0,
+            carbs: 94,
+            protein: 0.0
+          },
+          {
+            name: 'Lollipop',
+            calories: 392,
+            fat: 0.2,
+            carbs: 98,
+            protein: 0
+          },
+          {
+            name: 'Honeycomb',
+            calories: 408,
+            fat: 3.2,
+            carbs: 87,
+            protein: 6.5
+          },
+          {
+            name: 'Donut',
+            calories: 452,
+            fat: 25.0,
+            carbs: 51,
+            protein: 4.9
+          },
+          {
+            name: 'KitKat',
+            calories: 518,
+            fat: 26.0,
+            carbs: 65,
+            protein: 7
+          }
+        ]
       },
-      parseDate (date) {
-        if (!date) return null
 
-        const [day, month, year] = date.split('/')
-        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+      editItem (item) {
+        this.editedIndex = this.desserts.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+        const index = this.desserts.indexOf(item)
+        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+      },
+
+      close () {
+        this.dialog = false
+        setTimeout(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        }, 300)
+      },
+
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
       }
-    },
-    
-  
+    }
   }
 </script>
 
