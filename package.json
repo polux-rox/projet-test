@@ -16,11 +16,13 @@
     "email": "paul.poutet@aquassay.com"
   },
   "dependencies": {
+    "es6-promise": "^4.2.4",
     "normalize.css": "7.0.0",
     "object-assign": "4.1.1",
     "offline-plugin": "4.8.0",
     "promise-polyfill": "6.0.2",
-    "vuetify": "1.1.9"
+    "vuetify": "1.1.9",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "babel-eslint": "8.2.6",

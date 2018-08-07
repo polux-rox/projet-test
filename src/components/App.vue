@@ -26,9 +26,40 @@
                     <v-flex>
                         <v-container>
                             <v-layout wrap>
-                                <v-text-field  v-model="editedItem.name" label="name" clearable required></v-text-field>
+                                <v-text-field
+                                    v-model="editedItem.name" 
+                                    label="name"
+                                    clearable 
+                                    required>
+                                </v-text-field>
                                 <v-spacer></v-spacer>
-                                <v-text-field  v-model="editedItem.date" label="Date" clearable hint="Format: DD/MM/AAAA" required></v-text-field>
+                                <v-menu
+                                    ref="menu1"
+                                    :close-on-content-click="false"
+                                    v-model="menu1"
+                                    :nudge-right="70"
+                                    lazy
+                                    transition="scale-transition"
+                                    offset-y
+                                    full-width
+                                    max-width="290px"
+                                    min-width="290px">
+                                    <v-text-field
+                                        slot="activator"
+                                        v-model="dateFormatted"
+                                        label="Date"
+                                        hint="format : DD/MM/YYYY"
+                                        persistent-hint
+                                        prepend-icon="event"
+                                        required
+                                        @blur="date = parseDate(dateFormatted)"
+                                    ></v-text-field>
+                                    <v-date-picker 
+                                        v-model="date" 
+                                        no-title 
+                                        @input="menu1 = false">
+                                    </v-date-picker>
+                                </v-menu>
                             </v-layout>
                         </v-container>
                     </v-flex>
@@ -46,7 +77,6 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        </v-toolbar>
         <v-data-table
             :headers="headers"
             :items="desserts"
@@ -71,17 +101,23 @@
                     </v-icon>
                 </td>
             </template>
+            <template slot="footer">
+                <v-spacer></v-spacer>
+                <td class="text-xs-center">
+                    <v-btn 
+                        color="blue" 
+                        dark 
+                        @click="initialize">
+                        Reset
+                    </v-btn>
+                </td>
+            </template>
             <template slot="no-data">
                 <v-alert 
                     :value="true" 
                     color="warning" 
                     icon="warning">
                     Il n'y a rien dans cette table !!
-                    <td>
-                        <v-btn 
-                            color="red" 
-                            dark 
-                            @click="initialize">Reset</v-btn></td>
                 </v-alert>
             </template>
         </v-data-table>
@@ -131,11 +167,11 @@ export default {
     },
 
     watch   : {
-        dialog(val) {
-            val || this.close();
-        },
         date(val) {
             this.dateFormatted = this.formatDate(this.date);
+        },
+        dialog(val) {
+            val || this.close();
         },
     },
 
@@ -182,17 +218,12 @@ export default {
         },
 
         save() {
-            if (this.editedItem.date.length === 10) {
-                if (this.editedIndex > -1) {
-                    Object.assign(this.desserts[this.editedIndex], this.editedItem);
-                } else {
-                    this.desserts.push(this.editedItem);
-                }
-                this.close();
+            if (this.editedIndex > -1) {
+                Object.assign(this.desserts[this.editedIndex], this.editedItem);
             } else {
-                this.editedItem.date = '';
-                alert('Vous avez pas mis le bon format pour la date');
+                this.desserts.push(this.editedItem);
             }
+            this.close();
         },
     },
 };
