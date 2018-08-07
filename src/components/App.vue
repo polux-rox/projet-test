@@ -15,43 +15,23 @@
                 <v-icon>add</v-icon>
             </v-btn>
         </v-toolbar>
-        <v-dialog v-model="dialog">
+        <v-dialog 
+            v-model="dialog"
+            width="500">
             <v-card>
                 <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
                 <v-card-text>
-                    <v-container grid-list-md>
-                        <v-layout wrap>
-                            <v-text-field  v-model="editedItem.name" label="name"></v-text-field>
-                        </v-layout>
-                    </v-container>
-                    <v-container>
-                        <v-layout wrap>
-                            <v-menu
-                                ref="menu1"
-                                :close-on-content-click="false"
-                                v-model="menu1"
-                                :nudge-right="40"
-                                lazy
-                                transition="scale-transition"
-                                offset-y
-                                full-width
-                                max-width="290px"
-                                min-width="290px">
-                                <v-text-field
-                                  slot="activator"
-                                  v-model="dateFormatted"
-                                  label="Date"
-                                  hint="DD/MM/YYYY format"
-                                  persistent-hint
-                                  prepend-icon="event"
-                                  @blur="date = parseDate(dateFormatted)"
-                                ></v-text-field>
-                                <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
-                            </v-menu>
-                        </v-layout>
-                    </v-container>
+                    <v-flex>
+                        <v-container>
+                            <v-layout wrap>
+                                <v-text-field  v-model="editedItem.name" label="name" clearable required></v-text-field>
+                                <v-spacer></v-spacer>
+                                <v-text-field  v-model="editedItem.date" label="Date" clearable hint="Format: DD/MM/AAAA" required></v-text-field>
+                            </v-layout>
+                        </v-container>
+                    </v-flex>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -139,7 +119,11 @@ export default {
 
     computed  : {
         formTitle() {
-            return this.editedIndex === -1 ? 'New Task' : 'Edit Task';
+            if (this.editedIndex === -1) {
+                return 'New Task';
+            } else {
+                return 'Edit Task';
+            }
         },
         computedDateFormatted() {
             return this.formatDate(this.date);
@@ -198,12 +182,17 @@ export default {
         },
 
         save() {
-            if (this.editedIndex > -1) {
-                Object.assign(this.desserts[this.editedIndex], this.editedItem);
+            if (this.editedItem.date.length === 10) {
+                if (this.editedIndex > -1) {
+                    Object.assign(this.desserts[this.editedIndex], this.editedItem);
+                } else {
+                    this.desserts.push(this.editedItem);
+                }
+                this.close();
             } else {
-                this.desserts.push(this.editedItem);
+                this.editedItem.date = '';
+                alert('Vous avez pas mis le bon format pour la date');
             }
-            this.close();
         },
     },
 };
