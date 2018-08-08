@@ -26,35 +26,9 @@
                     <v-flex>
                         <v-container>
                             <v-layout wrap>
-                                <v-text-field
-                                    v-model="editedItem.name" 
-                                    label="name"
-                                    clearable 
-                                    required>
-                                </v-text-field>
-                                <v-dialog
-                                    ref="dialog"
-                                    v-model="modal"
-                                    :return-value.sync="date"
-                                    persistent
-                                    lazy
-                                    full-width
-                                    width="290px">
-                                    <v-text-field
-                                        slot="activator"
-                                        v-model="date"
-                                        label="Picker in dialog"
-                                        prepend-icon="event"
-                                        readonly>
-                                    </v-text-field>
-                                    <v-date-picker 
-                                        v-model="date" 
-                                        scrollable>
-                                    <v-spacer></v-spacer>
-                                    <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
-                                    <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
-                                    </v-date-picker>
-                                </v-dialog>
+                                <v-text-field  v-model="editedItem.name" label="name" clearable required></v-text-field>
+                                <v-spacer></v-spacer>
+                                <v-text-field  v-model="editedItem.date" label="Date" clearable hint="Format: DD/MM/AAAA" required></v-text-field>
                             </v-layout>
                         </v-container>
                     </v-flex>
@@ -72,6 +46,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        </v-toolbar>
         <v-data-table
             :headers="headers"
             :items="desserts"
@@ -81,7 +56,7 @@
                 slot="items" 
                 slot-scope="props">
                 <td>{{ props.item.name }}</td>
-                <td>{{ date }}</td>
+                <td>{{ props.item.date }}</td>
                 <td>
                     <v-icon
                         small
@@ -100,7 +75,7 @@
                 <v-spacer></v-spacer>
                 <td class="text-xs-center">
                     <v-btn 
-                        color="blue" 
+                        color="red" 
                         dark 
                         @click="initialize">
                         Reset
@@ -124,7 +99,8 @@ export default {
     data  : () => ({
         dialog        : false,
         date          : null,
-        modal         : false,
+        dateFormatted : null,
+        menu1         : false,
         headers       : [
             {
                 text      : 'Tâche',
@@ -143,10 +119,9 @@ export default {
         },
         defaultItem : {
             name    : '',
-            date    : new Date().toJSON(),
+            date    : '',
         },
     }),
-
     computed  : {
         formTitle() {
             if (this.editedIndex === -1) {
@@ -159,20 +134,17 @@ export default {
             return this.formatDate(this.date);
         },
     },
-
     watch   : {
-        date(val) {
-            this.dateFormatted = this.formatDate(this.date);
-        },
         dialog(val) {
             val || this.close();
         },
+        date(val) {
+            this.dateFormatted = this.formatDate(this.date);
+        },
     },
-
     created() {
         this.initialize();
     },
-
     methods   : {
         formatDate(date) {
             if (!date) {
@@ -191,34 +163,34 @@ export default {
         initialize() {
             this.desserts = [];
         },
-
         editItem(item) {
             this.editedIndex = this.desserts.indexOf(item);
             this.editedItem = Object.assign({}, item);
             this.dialog = true;
         },
-
         deleteItem(item) {
             const index = this.desserts.indexOf(item);
             confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.desserts.splice(index, 1);
         },
-
         close() {
             this.dialog = false;
             setTimeout(() => {
                 this.editedItem = Object.assign({}, this.defaultItem);
+                this.editedIndex = -1;
             }, 300);
         },
-
         save() {
-            if (this.editedIndex > -1) {
-                Object.assign(this.desserts[this.editedIndex], this.editedItem);
+            if (this.editedItem.date.length === 10) {
+                if (this.editedIndex > -1) {
+                    Object.assign(this.desserts[this.editedIndex], this.editedItem);
+                } else {
+                    this.desserts.push(this.editedItem);
+                }
+                this.close();
             } else {
-                alert (this.date);
-                this.editItem = this.date;
-                this.desserts.push(this.editedItem);
+                this.editedItem.date = '';
+                alert('Vous avez pas mis le bon format pour la date');
             }
-            this.close();
         },
     },
 };
