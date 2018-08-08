@@ -32,34 +32,29 @@
                                     clearable 
                                     required>
                                 </v-text-field>
-                                <v-spacer></v-spacer>
-                                <v-menu
-                                    ref="menu1"
-                                    :close-on-content-click="false"
-                                    v-model="menu1"
-                                    :nudge-right="70"
+                                <v-dialog
+                                    ref="dialog"
+                                    v-model="modal"
+                                    :return-value.sync="date"
+                                    persistent
                                     lazy
-                                    transition="scale-transition"
-                                    offset-y
                                     full-width
-                                    max-width="290px"
-                                    min-width="290px">
+                                    width="290px">
                                     <v-text-field
                                         slot="activator"
-                                        v-model="dateFormatted"
-                                        label="Date"
-                                        hint="format : DD/MM/YYYY"
-                                        persistent-hint
+                                        v-model="date"
+                                        label="Picker in dialog"
                                         prepend-icon="event"
-                                        required
-                                        @blur="date = parseDate(dateFormatted)"
-                                    ></v-text-field>
+                                        readonly>
+                                    </v-text-field>
                                     <v-date-picker 
                                         v-model="date" 
-                                        no-title 
-                                        @input="menu1 = false">
+                                        scrollable>
+                                    <v-spacer></v-spacer>
+                                    <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
+                                    <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
                                     </v-date-picker>
-                                </v-menu>
+                                </v-dialog>
                             </v-layout>
                         </v-container>
                     </v-flex>
@@ -86,7 +81,7 @@
                 slot="items" 
                 slot-scope="props">
                 <td>{{ props.item.name }}</td>
-                <td>{{ props.item.date }}</td>
+                <td>{{ date }}</td>
                 <td>
                     <v-icon
                         small
@@ -129,8 +124,7 @@ export default {
     data  : () => ({
         dialog        : false,
         date          : null,
-        dateFormatted : null,
-        menu1         : false,
+        modal         : false,
         headers       : [
             {
                 text      : 'Tâche',
@@ -149,7 +143,7 @@ export default {
         },
         defaultItem : {
             name    : '',
-            date    : '',
+            date    : new Date().toJSON(),
         },
     }),
 
@@ -213,7 +207,6 @@ export default {
             this.dialog = false;
             setTimeout(() => {
                 this.editedItem = Object.assign({}, this.defaultItem);
-                this.editedIndex = -1;
             }, 300);
         },
 
@@ -221,6 +214,8 @@ export default {
             if (this.editedIndex > -1) {
                 Object.assign(this.desserts[this.editedIndex], this.editedItem);
             } else {
+                alert (this.date);
+                this.editItem = this.date;
                 this.desserts.push(this.editedItem);
             }
             this.close();
