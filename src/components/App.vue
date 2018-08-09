@@ -1,8 +1,8 @@
 <template>
-    <v-app>
+    <v-app dark>
         <v-toolbar>
             <v-toolbar-title>Test Paul</v-toolbar-title>
-            <v-spacer></v-spacer>
+            <v-spacer/>
             <v-btn
                 color="blue"  
                 dark 
@@ -26,15 +26,24 @@
                     <v-flex>
                         <v-container>
                             <v-layout wrap>
-                                <v-text-field  v-model="editedItem.name" label="name" clearable required></v-text-field>
-                                <v-spacer></v-spacer>
-                                <v-text-field  v-model="editedItem.date" label="Date" clearable hint="Format: DD/MM/AAAA" required></v-text-field>
+                                <v-text-field
+                                    v-model="editedItem.name" 
+                                    label="name" 
+                                    clearable 
+                                    required/>
+                                <v-spacer/>
+                                <v-text-field
+                                    v-model="editedItem.date" 
+                                    label="Date" 
+                                    clearable 
+                                    hint="Format: DD/MM/AAAA" 
+                                    required/>
                             </v-layout>
                         </v-container>
                     </v-flex>
                 </v-card-text>
                 <v-card-actions>
-                    <v-spacer></v-spacer>
+                    <v-spacer/>
                     <v-btn 
                         color="blue" 
                         flat 
@@ -46,15 +55,15 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        </v-toolbar>
         <v-data-table
             :headers="headers"
             :items="desserts"
             hide-actions
             class="elevation-1">
             <template
-                slot="items" 
-                slot-scope="props">
+            
+                slot-scope="props"
+                slot="items">
                 <td>{{ props.item.name }}</td>
                 <td>{{ props.item.date }}</td>
                 <td>
@@ -72,10 +81,10 @@
                 </td>
             </template>
             <template slot="footer">
-                <v-spacer></v-spacer>
+                <v-spacer/>
                 <td class="text-xs-center">
                     <v-btn 
-                        color="red" 
+                        color="warning" 
                         dark 
                         @click="initialize">
                         Reset
@@ -92,15 +101,20 @@
             </template>
         </v-data-table>
     </v-app>
+    
 </template>
 
 <script>
+// import Store from './Store.js';
+
 export default {
+
+    // store   :   Store,
+ 
     data  : () => ({
         dialog        : false,
         date          : null,
         dateFormatted : null,
-        menu1         : false,
         headers       : [
             {
                 text      : 'Tâche',
@@ -130,36 +144,16 @@ export default {
                 return 'Edit Task';
             }
         },
-        computedDateFormatted() {
-            return this.formatDate(this.date);
-        },
     },
     watch   : {
         dialog(val) {
             val || this.close();
-        },
-        date(val) {
-            this.dateFormatted = this.formatDate(this.date);
         },
     },
     created() {
         this.initialize();
     },
     methods   : {
-        formatDate(date) {
-            if (!date) {
-                return null;
-            }
-            const [year, month, day] = date.split('-');
-            return `${day}/${month}/${year}`;
-        },
-        parseDate(date) {
-            if (!date) {
-                return null;
-            }
-            const [day, month, year] = date.split('/');
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        },
         initialize() {
             this.desserts = [];
         },
@@ -170,7 +164,8 @@ export default {
         },
         deleteItem(item) {
             const index = this.desserts.indexOf(item);
-            confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.desserts.splice(index, 1);
+            confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.desserts.splice(index, 1) && localStorage.removeItem(index);
+            console.log('delete : ' + localStorage.length);
         },
         close() {
             this.dialog = false;
@@ -183,9 +178,15 @@ export default {
             if (this.editedItem.date.length === 10) {
                 if (this.editedIndex > -1) {
                     Object.assign(this.desserts[this.editedIndex], this.editedItem);
+                    localStorage.setItem(this.desserts[this.editedIndex], JSON.stringify(this.editedItem));
+                    console.log('this.editedIndex > -1 : '+ localStorage.getItem(this.desserts[this.editedIndex]));
+                    console.log('taille du localStorage dans le if : '+ localStorage.length);
                 } else {
                     this.desserts.push(this.editedItem);
-                }
+                    localStorage.setItem((this.desserts.length) - 1, JSON.stringify(this.editedItem));
+                    console.log('else : '+ localStorage.getItem((this.desserts.length) - 1));
+                    console.log('taille du localStorage dans le else : '+ localStorage.length);
+                }   
                 this.close();
             } else {
                 this.editedItem.date = '';

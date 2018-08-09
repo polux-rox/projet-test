@@ -22,7 +22,7 @@
     "offline-plugin": "4.8.0",
     "promise-polyfill": "6.0.2",
     "vuetify": "1.1.9",
-    "vuex": "2.0.0-rc.5"
+    "vuex": "^2.5.0"
   },
   "devDependencies": {
     "babel-eslint": "8.2.6",
