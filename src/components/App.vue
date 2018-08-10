@@ -86,6 +86,7 @@
                     <v-btn 
                         color="warning" 
                         dark 
+                        outline
                         @click="initialize">
                         Reset
                     </v-btn>
@@ -95,7 +96,8 @@
                 <v-alert 
                     :value="true" 
                     color="warning" 
-                    icon="warning">
+                    icon="warning"
+                    outline>
                     Il n'y a rien dans cette table !!
                 </v-alert>
             </template>
@@ -125,6 +127,7 @@ export default {
             { text  : 'date', value : 'date' },
             { text  : 'Actions', value  : 'name', sortable  : false },
         ],
+        count       : 0,
         desserts    : [],
         editedIndex : -1,
         editedItem  : {
@@ -151,11 +154,21 @@ export default {
         },
     },
     created() {
+        // localStorage.clear();
         this.initialize();
     },
     methods   : {
         initialize() {
             this.desserts = [];
+            if (localStorage.length > 0) {
+                this.count = (localStorage.length) - 1;
+                let i = 0;
+                while (i < localStorage.length) {
+                    console.log(JSON.parse(localStorage.getItem(i)));
+                    this.desserts.push(JSON.parse(localStorage.getItem(i)));
+                    i++;
+                }
+            }
         },
         editItem(item) {
             this.editedIndex = this.desserts.indexOf(item);
@@ -164,8 +177,11 @@ export default {
         },
         deleteItem(item) {
             const index = this.desserts.indexOf(item);
-            confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.desserts.splice(index, 1) && localStorage.removeItem(index);
-            console.log('delete : ' + localStorage.length);
+            console.log(localStorage);
+            confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.desserts.splice(index, 1);
+            localStorage.removeItem(index);
+            console.log(localStorage);
+            this.count--;
         },
         close() {
             this.dialog = false;
@@ -177,16 +193,15 @@ export default {
         save() {
             if (this.editedItem.date.length === 10) {
                 if (this.editedIndex > -1) {
+                    console.log(this.desserts[this.editedIndex]);
                     Object.assign(this.desserts[this.editedIndex], this.editedItem);
-                    localStorage.setItem(this.desserts[this.editedIndex], JSON.stringify(this.editedItem));
-                    console.log('this.editedIndex > -1 : '+ localStorage.getItem(this.desserts[this.editedIndex]));
-                    console.log('taille du localStorage dans le if : '+ localStorage.length);
+                    localStorage.setItem(this.count, JSON.stringify(this.editedItem));
                 } else {
+                    console.log(this.editedIndex);
                     this.desserts.push(this.editedItem);
-                    localStorage.setItem((this.desserts.length) - 1, JSON.stringify(this.editedItem));
-                    console.log('else : '+ localStorage.getItem((this.desserts.length) - 1));
-                    console.log('taille du localStorage dans le else : '+ localStorage.length);
-                }   
+                    localStorage.setItem(this.count, JSON.stringify(this.editedItem));
+                    this.count++; 
+                }
                 this.close();
             } else {
                 this.editedItem.date = '';
