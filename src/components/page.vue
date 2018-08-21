@@ -1,9 +1,6 @@
 <template>
     <v-app dark>
-        <dialog/>
-        <hr>
-        <page/>
-        <!-- <v-toolbar>
+        <v-toolbar>
             <v-toolbar-title>Test Paul</v-toolbar-title>
             <v-spacer/>
             <v-btn
@@ -18,53 +15,12 @@
                 <v-icon>add</v-icon>
             </v-btn>
         </v-toolbar>
-        <v-dialog 
-            v-model="dialog"
-            width="500">
-            <v-card>
-                <v-card-title>
-                    <span class="headline">Edit Task</span>
-                </v-card-title>
-                <v-card-text>
-                    <v-flex>
-                        <v-container>
-                            <v-layout wrap>
-                                <v-text-field
-                                    v-model="editedItem.name" 
-                                    label="name" 
-                                    clearable 
-                                    required/>
-                                <v-spacer/>
-                                <v-text-field
-                                    v-model="editedItem.date" 
-                                    label="Date" 
-                                    clearable 
-                                    hint="Format: DD/MM/AAAA" 
-                                    required/>
-                            </v-layout>
-                        </v-container>
-                    </v-flex>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer/>
-                    <v-btn 
-                        color="blue" 
-                        flat 
-                        @click.native="close">Cancel</v-btn>
-                    <v-btn
-                        color="blue"
-                        flat 
-                        @click.native="save">Save</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
         <v-data-table
             :headers="headers"
             :items="desserts"
             hide-actions
             class="elevation-1">
             <template
-            
                 slot-scope="props"
                 slot="items">
                 <td>{{ props.item.name }}</td>
@@ -101,26 +57,18 @@
                     color="warning" 
                     icon="warning"
                     outline>
-                    Il n'y a rien dans cette table !!
+                    Veuillez enregistrer des tâches !!
                 </v-alert>
             </template>
-        </v-data-table> -->
+        </v-data-table>
     </v-app>
-    
 </template>
 
 <script>
-// import Store from './Store.js';
-import dialog from './dialog';
-import page from './page';
 export default {
-    // store   :   Store,
-    components  : { 
-        dialog, 
-        page,
-    },
-    data  : () => ({
-        dialog        : false,
+
+    data        : () => ({
+        
         date          : null,
         dateFormatted : null,
         headers       : [
@@ -145,22 +93,10 @@ export default {
             date    : '',
         },
     }),
-    computed  : {
-        formTitle() {
-            if (this.editedIndex === -1) {
-                return 'New Task';
-            } else {
-                return 'Edit Task';
-            }
-        },
-    },
-    watch   : {
-        dialog(val) {
-            val || this.close();
-        },
-    },
+    
+    
     created() {
-        localStorage.clear();
+        // localStorage.clear();
         this.initialize();
     },
     methods   : {
@@ -189,34 +125,6 @@ export default {
             console.log(localStorage);
             this.count--;
         },
-        close() {
-            this.dialog = false;
-            setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem);
-                this.editedIndex = -1;
-            }, 300);
-        },
-        save() {
-            if (this.editedItem.date.length === 10) {
-                if (this.editedIndex > -1) {
-                    console.log(this.desserts[this.editedIndex]);
-                    Object.assign(this.desserts[this.editedIndex], this.editedItem);
-                    localStorage.setItem(this.count, JSON.stringify(this.editedItem));
-                } else {
-                    console.log(this.editedIndex);
-                    this.desserts.push(this.editedItem);
-                    localStorage.setItem(this.count, JSON.stringify(this.editedItem));
-                    this.count++; 
-                }
-                this.close();
-            } else {
-                this.editedItem.date = '';
-                alert('Vous avez pas mis le bon format pour la date');
-            }
-        },
     },
 };
 </script>
-
-<!-- CSS libraries -->
-<style src="normalize.css/normalize.css"></style>

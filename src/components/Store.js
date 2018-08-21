@@ -1,5 +1,12 @@
 import Vuex from 'vuex';
 
+const State = {
+    task   : [{
+        name    : '',
+        date    : '',
+    }],
+    dialog : false,
+};
 
 const Mutations = {
     ADD_TASK(state, name , date) {
@@ -25,12 +32,8 @@ const Guetters = {
 };
 
 const store =  new Vuex.Store({
-    state       : {
-        task   : [{
-            name    : '',
-            date    : '',
-        }],
-    },
+    namespaced  : true,
+    state       : State,
     mutations   : Mutations,
     guetters    : Guetters,
     actions     : {},
