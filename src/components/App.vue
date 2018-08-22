@@ -1,7 +1,5 @@
 <template>
     <v-app dark>
-        <dialog/>
-        <hr>
         <page/>
         <!-- <v-toolbar>
             <v-toolbar-title>Test Paul</v-toolbar-title>
@@ -23,7 +21,7 @@
             width="500">
             <v-card>
                 <v-card-title>
-                    <span class="headline">Edit Task</span>
+                    <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
                 <v-card-text>
                     <v-flex>
@@ -31,15 +29,17 @@
                             <v-layout wrap>
                                 <v-text-field
                                     v-model="editedItem.name" 
-                                    label="name" 
-                                    clearable 
+                                    label="Name"
+                                    type="text"
+                                    clearable
                                     required/>
                                 <v-spacer/>
                                 <v-text-field
                                     v-model="editedItem.date" 
                                     label="Date" 
-                                    clearable 
-                                    hint="Format: DD/MM/AAAA" 
+                                    clearable
+                                    type="text"
+                                    hint="Format: DD/MM/AAAA"
                                     required/>
                             </v-layout>
                         </v-container>
@@ -60,7 +60,7 @@
         </v-dialog>
         <v-data-table
             :headers="headers"
-            :items="desserts"
+            :items="tasks"
             hide-actions
             class="elevation-1">
             <template
@@ -111,110 +111,101 @@
 
 <script>
 // import Store from './Store.js';
-import dialog from './dialog';
+import Dialog from './dialog';
 import page from './page';
 export default {
-    // store   :   Store,
+    // store       :   Store,
     components  : { 
-        dialog, 
+        Dialog,
         page,
     },
-    data  : () => ({
-        dialog        : false,
-        date          : null,
-        dateFormatted : null,
-        headers       : [
-            {
-                text      : 'Tâche',
-                align     : 'left',
-                sortable  : false,
-                value     : 'name',
-            },
-            { text  : 'date', value : 'date' },
-            { text  : 'Actions', value  : 'name', sortable  : false },
-        ],
-        count       : 0,
-        desserts    : [],
-        editedIndex : -1,
-        editedItem  : {
-            name    : '',
-            date    : '',
-        },
-        defaultItem : {
-            name    : '',
-            date    : '',
-        },
-    }),
-    computed  : {
-        formTitle() {
-            if (this.editedIndex === -1) {
-                return 'New Task';
-            } else {
-                return 'Edit Task';
-            }
-        },
+    data() {
+        return {
+            dialog        : false,
+        };
     },
-    watch   : {
-        dialog(val) {
-            val || this.close();
-        },
-    },
-    created() {
-        localStorage.clear();
-        this.initialize();
-    },
-    methods   : {
-        initialize() {
-            this.desserts = [];
-            if (localStorage.length > 0) {
-                this.count = (localStorage.length) - 1;
-                let i = 0;
-                while (i < localStorage.length) {
-                    console.log(JSON.parse(localStorage.getItem(i)));
-                    this.desserts.push(JSON.parse(localStorage.getItem(i)));
-                    i++;
-                }
-            }
-        },
-        editItem(item) {
-            this.editedIndex = this.desserts.indexOf(item);
-            this.editedItem = Object.assign({}, item);
-            this.dialog = true;
-        },
-        deleteItem(item) {
-            const index = this.desserts.indexOf(item);
-            console.log(localStorage);
-            confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.desserts.splice(index, 1);
-            localStorage.removeItem(index);
-            console.log(localStorage);
-            this.count--;
-        },
-        close() {
-            this.dialog = false;
-            setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem);
-                this.editedIndex = -1;
-            }, 300);
-        },
-        save() {
-            if (this.editedItem.date.length === 10) {
-                if (this.editedIndex > -1) {
-                    console.log(this.desserts[this.editedIndex]);
-                    Object.assign(this.desserts[this.editedIndex], this.editedItem);
-                    localStorage.setItem(this.count, JSON.stringify(this.editedItem));
-                } else {
-                    console.log(this.editedIndex);
-                    this.desserts.push(this.editedItem);
-                    localStorage.setItem(this.count, JSON.stringify(this.editedItem));
-                    this.count++; 
-                }
-                this.close();
-            } else {
-                this.editedItem.date = '';
-                alert('Vous avez pas mis le bon format pour la date');
-            }
-        },
-    },
+    //         date          : null,
+    //         dateFormatted : null,
+    //         headers       : [
+    //             {
+    //                 text      : 'Tâche',
+    //                 align     : 'left',
+    //                 sortable  : false,
+    //                 value     : 'name',
+    //             },
+    //             { text  : 'date', value : 'date' },
+    //             { text  : 'Actions', value  : 'name', sortable  : false },
+    //         ],
+    //         count       : 0,
+    //         tasks       : [],
+    //         editedIndex : -1,
+    //         editedItem  : {
+    //             name    : '',
+    //             date    : '',
+    //         },
+    //         defaultItem : {
+    //             name    : '',
+    //             date    : '',
+    //         },
+    //     };
+    // },
+    // computed  : {
+    //     formTitle() {
+    //         if (this.editedIndex === -1) {
+    //             return 'New Task';
+    //         } else {
+    //             return 'Edit Task';
+    //         }
+    //     },
+    // },
+    // watch   : {
+    //     dialog(val) {
+    //         val || this.close();
+    //     },
+    // },
+    // created() {
+    //     this.initialize();
+    // },
+    // methods   : {
+    //     initialize() {
+    //         this.tasks = [
+    //             {
+    //                 name : 'Paul',
+    //                 date : '26/12/1997',
+    //             },
+    //         ];
+    //     },
+    //     editItem(item) {
+    //         this.editedIndex = this.tasks.indexOf(item);
+    //         this.editedItem = Object.assign({}, item);
+    //         this.dialog = true;
+    //     },
+    //     deleteItem(item) {
+    //         const index = this.tasks.indexOf(item);
+    //         confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.tasks.splice(index, 1);
+    //     },
+    //     close() {
+    //         this.dialog = false;
+    //         setTimeout(() => {
+    //             this.editedItem = Object.assign({}, this.defaultItem);
+    //             this.editedIndex = -1;
+    //         }, 300);
+    //     },
+    //     save() {
+    //         if (this.editedItem.date.length === 10) {
+    //             if (this.editedIndex > -1) {
+    //                 Object.assign(this.tasks[this.editedIndex], this.editedItem);
+    //             } else {
+    //                 console.log(this.editedIndex);
+    //                 this.tasks.push(this.editedItem);
+    //             }
+    //             this.close();
+    //         } else {
+    //             this.editedItem.date = '';
+    //             alert('Vous avez pas mis le bon format pour la date');
+    //         }
+    //     },
+    // },
 };
 </script>
 

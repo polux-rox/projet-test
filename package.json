@@ -31,6 +31,7 @@
     "eslint-plugin-vue": "4.7.1",
     "poi": "9.6.13",
     "poi-preset-bundle-report": "2.0.0",
+    "poi-preset-eslint": "9.1.1",
     "poi-preset-offline": "9.0.3",
     "serve": "6.1.0",
     "vue-eslint-parser": "3.2.2"

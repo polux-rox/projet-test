@@ -15,9 +15,14 @@
                 <v-icon>add</v-icon>
             </v-btn>
         </v-toolbar>
+        <v-dialog 
+            v-model="dialog"
+            width="500">
+            <dialog/>
+        </v-dialog>
         <v-data-table
             :headers="headers"
-            :items="desserts"
+            :items="tasks"
             hide-actions
             class="elevation-1">
             <template
@@ -65,34 +70,39 @@
 </template>
 
 <script>
+import Dialog from './dialog';
 export default {
-
-    data        : () => ({
-        
-        date          : null,
-        dateFormatted : null,
-        headers       : [
-            {
-                text      : 'Tâche',
-                align     : 'left',
-                sortable  : false,
-                value     : 'name',
+    components  : { 
+        Dialog,
+    },
+    data() {
+        return {
+            dialog        : false,
+            date          : null,
+            dateFormatted : null,
+            headers       : [
+                {
+                    text      : 'Tâche',
+                    align     : 'left',
+                    sortable  : false,
+                    value     : 'name',
+                },
+                { text  : 'date', value : 'date' },
+                { text  : 'Actions', value  : 'name', sortable  : false },
+            ],
+            count       : 0,
+            tasks       : [],
+            editedIndex : -1,
+            editedItem  : {
+                name    : '',
+                date    : '',
             },
-            { text  : 'date', value : 'date' },
-            { text  : 'Actions', value  : 'name', sortable  : false },
-        ],
-        count       : 0,
-        desserts    : [],
-        editedIndex : -1,
-        editedItem  : {
-            name    : '',
-            date    : '',
-        },
-        defaultItem : {
-            name    : '',
-            date    : '',
-        },
-    }),
+            defaultItem : {
+                name    : '',
+                date    : '',
+            },
+        };
+    },
     
     
     created() {
@@ -101,29 +111,25 @@ export default {
     },
     methods   : {
         initialize() {
-            this.desserts = [];
-            if (localStorage.length > 0) {
-                this.count = (localStorage.length) - 1;
-                let i = 0;
-                while (i < localStorage.length) {
-                    console.log(JSON.parse(localStorage.getItem(i)));
-                    this.desserts.push(JSON.parse(localStorage.getItem(i)));
-                    i++;
-                }
-            }
+            this.tasks = [
+                {
+                    name    : 'Mickel',
+                    date    : '22/08/2018',
+                },
+                {
+                    name    : 'Paul',
+                    date    : '25/08/2018',
+                },
+            ];
         },
         editItem(item) {
-            this.editedIndex = this.desserts.indexOf(item);
+            this.editedIndex = this.tasks.indexOf(item);
             this.editedItem = Object.assign({}, item);
             this.dialog = true;
         },
         deleteItem(item) {
-            const index = this.desserts.indexOf(item);
-            console.log(localStorage);
-            confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.desserts.splice(index, 1);
-            localStorage.removeItem(index);
-            console.log(localStorage);
-            this.count--;
+            const index = this.tasks.indexOf(item);
+            confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.tasks.splice(index, 1);
         },
     },
 };
