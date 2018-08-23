@@ -15,12 +15,7 @@
                 <v-icon>add</v-icon>
             </v-btn>
         </v-toolbar>
-        <v-dialog
-            v-model="dialog"
-            width="500">
-            <pa-dialog/>
-        </v-dialog>
-
+        <pa-dialog v-model="dialog"/>
         <v-data-table
             :headers="headers"
             :items="tasks"
@@ -67,19 +62,22 @@
                 </v-alert>
             </template>
         </v-data-table>
+        <pa-delete v-model="del"/>
     </div>
 </template>
 
 <script>
-import PaDialog from './dialog.vue';
-
+import PaDialog from './common/Dialog.vue';
+import PaDelete from './common/Delete.vue';
 export default {
-    name        : 'Page',
+    name        : 'Task',
     components  : {
         PaDialog,
+        PaDelete,
     },
     data() {
         return {
+            del           : false,
             dialog        : false,
             date          : null,
             dateFormatted : null,
