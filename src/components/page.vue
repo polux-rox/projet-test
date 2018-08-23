@@ -1,25 +1,26 @@
 <template>
-    <v-app dark>
+    <div>
         <v-toolbar>
             <v-toolbar-title>Test Paul</v-toolbar-title>
             <v-spacer/>
             <v-btn
-                color="blue"  
-                dark 
-                small 
-                absolute 
-                bottom 
-                right 
+                color="blue"
+                dark
+                small
+                absolute
+                bottom
+                right
                 fab
                 @click="dialog=true">
                 <v-icon>add</v-icon>
             </v-btn>
         </v-toolbar>
-        <v-dialog 
+        <v-dialog
             v-model="dialog"
             width="500">
-            <dialog/>
+            <pa-dialog/>
         </v-dialog>
+
         <v-data-table
             :headers="headers"
             :items="tasks"
@@ -47,9 +48,9 @@
             <template slot="footer">
                 <v-spacer/>
                 <td class="text-xs-center">
-                    <v-btn 
-                        color="warning" 
-                        dark 
+                    <v-btn
+                        color="warning"
+                        dark
                         outline
                         @click="initialize">
                         Reset
@@ -57,23 +58,25 @@
                 </td>
             </template>
             <template slot="no-data">
-                <v-alert 
-                    :value="true" 
-                    color="warning" 
+                <v-alert
+                    :value="true"
+                    color="warning"
                     icon="warning"
                     outline>
                     Veuillez enregistrer des tâches !!
                 </v-alert>
             </template>
         </v-data-table>
-    </v-app>
+    </div>
 </template>
 
 <script>
-import Dialog from './dialog';
+import PaDialog from './dialog.vue';
+
 export default {
-    components  : { 
-        Dialog,
+    name        : 'Page',
+    components  : {
+        PaDialog,
     },
     data() {
         return {
@@ -103,8 +106,6 @@ export default {
             },
         };
     },
-    
-    
     created() {
         // localStorage.clear();
         this.initialize();

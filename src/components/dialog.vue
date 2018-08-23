@@ -1,49 +1,48 @@
 <template>
-    <div>
-        <v-card>
-            <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-            <v-card-text>
-                <v-flex>
-                    <v-container>
-                        <v-layout>
-                            <v-text-field
-                                v-model="editedItem.name"
-                                :rules="Rname"
-                                label="Name"
-                                clearable 
-                                required/>
-                            <v-spacer/>
-                            <v-text-field
-                                v-model="editedItem.date"
-                                :rules="Rdate"
-                                label="Date" 
-                                clearable 
-                                hint="Format: DD/MM/AAAA" 
-                                required/>
-                        </v-layout>
-                    </v-container>
-                </v-flex>
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer/>
-                <v-btn 
-                    color="blue" 
-                    flat 
-                    @click.native="close">Cancel</v-btn>
-                <v-btn
-                    color="blue"
-                    flat 
-                    @click.native="save">Save</v-btn>
-            </v-card-actions>
-        </v-card>
-    </div>
+    <v-card>
+        <v-card-title>
+            <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
+        <v-card-text>
+            <v-flex>
+                <v-container>
+                    <v-layout>
+                        <v-text-field
+                            v-model="editedItem.name"
+                            :rules="Rname"
+                            label="Name"
+                            clearable
+                            required/>
+                        <v-spacer/>
+                        <v-text-field
+                            v-model="editedItem.date"
+                            :rules="Rdate"
+                            label="Date"
+                            clearable
+                            hint="Format: DD/MM/AAAA"
+                            required/>
+                    </v-layout>
+                </v-container>
+            </v-flex>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer/>
+            <v-btn
+                color="blue"
+                flat
+                @click.native="close">Cancel</v-btn>
+            <v-btn
+                color="blue"
+                flat
+                @click.native="save">Save</v-btn>
+        </v-card-actions>
+    </v-card>
 </template>
 
 <script>
 // import { mapGetters, mapState } from 'vuex';
 export default {
+    name : 'Dialog',
     data() {
         return {
             dialog      : false,
@@ -79,7 +78,6 @@ export default {
             val || this.close();
         },
     },
-    
     methods   : {
         close() {
             this.dialog = false;
@@ -102,7 +100,5 @@ export default {
             }
         },
     },
-    
-
 };
 </script>
