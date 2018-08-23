@@ -1,5 +1,5 @@
 <template>
-    <v-app dark>
+    <div>
         <v-card>
             <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
@@ -38,7 +38,7 @@
                     @click.native="save">Save</v-btn>
             </v-card-actions>
         </v-card>
-    </v-app>
+    </div>
 </template>
 
 <script>
@@ -91,11 +91,8 @@ export default {
         save() {
             if (this.editedItem.date.length === 10) {
                 if (this.editedIndex > -1) {
-                    console.log(this.tasks[this.editedIndex]);
                     Object.assign(this.tasks[this.editedIndex], this.editedItem);
-                    localStorage.setItem(this.count, JSON.stringify(this.editedItem));
                 } else {
-                    console.log(this.editedIndex);
                     this.tasks.push(this.editedItem);
                 }
                 this.close();

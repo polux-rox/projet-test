@@ -111,19 +111,18 @@
 
 <script>
 // import Store from './Store.js';
-import Dialog from './dialog';
+
 import page from './page';
 export default {
     // store       :   Store,
-    components  : { 
-        Dialog,
+    components  : {
         page,
     },
-    data() {
-        return {
-            dialog        : false,
-        };
-    },
+    // data() {
+    //     return {
+    //         dialog        : false,
+    //     };
+    // },
     //         date          : null,
     //         dateFormatted : null,
     //         headers       : [
