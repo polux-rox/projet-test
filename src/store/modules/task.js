@@ -1,12 +1,7 @@
 const store = {
     namespaced  : true,
     state       : {
-        tasks    : [
-            {
-                name : 'GS',
-                date : '26/12/1997',
-            },
-        ],
+        tasks    : [],
     },
     mutations : {
         addTask(state, item) {

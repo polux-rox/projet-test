@@ -13,7 +13,7 @@
                         <v-toolbar-title>Test Paul</v-toolbar-title>
                         <v-spacer/>
                         <v-btn
-                            color="red"
+                            color="grey"
                             dark
                             small
                             absolute
@@ -21,7 +21,7 @@
                             right
                             fab
                             @click="dialog=true">
-                            <v-icon>add</v-icon>
+                            <v-icon color="orange">add</v-icon>
                         </v-btn>
                     </v-toolbar>
                     <v-dialog

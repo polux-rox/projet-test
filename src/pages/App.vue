@@ -1,7 +1,7 @@
 <template>
-    <v-app>
+    <v-app dark>
         <v-toolbar
-            color="blue"
+            color="orange"
             dark
             extended
             flat/>

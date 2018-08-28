@@ -6,12 +6,12 @@
                 <template>
                     <v-spacer/>
                     <v-btn
-                        color="blue"
+                        color="orange"
                         flat
                         @click.native="close">Cancel
                     </v-btn>
                     <v-btn
-                        color="blue"
+                        color="orange"
                         flat
                         @click.native="del">Delete
                     </v-btn>

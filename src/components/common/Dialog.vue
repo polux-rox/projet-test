@@ -55,11 +55,11 @@
         <v-card-actions>
             <v-spacer/>
             <v-btn
-                color="blue"
+                color="orange"
                 flat>Cancel
             </v-btn>
             <v-btn
-                color="blue"
+                color="orange"
                 flat
                 @click.native="save">Save
             </v-btn>
