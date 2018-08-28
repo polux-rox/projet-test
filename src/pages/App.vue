@@ -1,18 +1,16 @@
 <template>
     <v-app dark>
         <v-toolbar
-            color="primary"
+            color="blue"
             dark
             extended
-            flat>
-            <v-toolbar-side-icon/>
-        </v-toolbar>
+            flat/>
         <task/>
     </v-app>
 </template>
 
 <script>
-import task from './components/Task.vue';
+import task from '/mnt/c/Users/paul.poutet/dev/vuejs/monprojetVuejs/projet-test/src/components/Task.vue';
 export default {
     name        : 'App',
     components  : {

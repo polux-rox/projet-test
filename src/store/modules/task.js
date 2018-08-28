@@ -3,18 +3,21 @@ const store = {
     state       : {
         task    : [
             {
-                name    : '',
-                date    : '',
             },
         ],
     },
     mutations : {
         add_task(state ,Name , NDate) {
             const NewTask = {
-                name : Name,
-                date : NDate,
+                name  : Name,
+                date  : NDate,
             };
             state.task.push(NewTask);
+        },
+
+        del_task(state, item) {
+            const index = this.tasks.indexOf(item);
+            state.task.splice(index, 1);
         },
     },
     actions : {
