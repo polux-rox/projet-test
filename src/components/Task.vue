@@ -13,7 +13,7 @@
                         <v-toolbar-title>Test Paul</v-toolbar-title>
                         <v-spacer/>
                         <v-btn
-                            color="blue"
+                            color="red"
                             dark
                             small
                             absolute

@@ -14,13 +14,37 @@
                             clearable
                             required/>
                         <v-spacer/>
-                        <v-text-field
-                            v-model="editedItem.date"
-                            class="date"
-                            label="Date"
-                            clearable
-                            hint="Format: DD/MM/AAAA"
-                            required/>
+                        <v-menu
+                            ref="menu"
+                            :close-on-content-click="false"
+                            v-model="menu"
+                            :nudge-right="40"
+                            :return-value.sync="date"
+                            lazy
+                            transition="scale-transition"
+                            offset-y
+                            full-width
+                            min-width="290px">
+                            <v-text-field
+                                slot="activator"
+                                v-model="editedItem.date"
+                                label="Picker in menu"
+                                prepend-icon="event"
+                                readonly/>
+                            <v-date-picker 
+                                v-model="editedItem.date"
+                                class="date"
+                                no-title 
+                                scrollable>
+                                <v-spacer/>
+                                <v-btn 
+                                    flat
+                                    @click="menu = false">Cancel</v-btn>
+                                <v-btn 
+                                    flat 
+                                    @click="$refs.menu.save(date)">OK</v-btn>
+                            </v-date-picker>
+                        </v-menu>
                     </v-layout>
                 </v-container>
             </v-flex>
@@ -41,11 +65,12 @@
 </template>
 
 <script>
-// import { mapGetters, mapMutations } from 'vuex';
 export default {
     name : 'Dialog',
     data() {
         return {
+            date        : null,
+            menu        : false,
             editedItem  : {
                 name    : '',
                 date    : '',
@@ -73,9 +98,10 @@ export default {
     },
     methods   : {
         save() {
-            this.$store.dispatch('task/save', this.editedItem);
-
-            console.log(this.$store.getters['task/getTasks']);
+            if ((this.editedItem.name !== '') || (this.editedItem.date !== '')) {
+                this.$store.dispatch('task/save', this.editedItem);
+                console.log(this.$store.getters['task/getTasks']);
+            }
         },
     },
 };

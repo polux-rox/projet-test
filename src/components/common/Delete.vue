@@ -13,7 +13,7 @@
                     <v-btn
                         color="blue"
                         flat
-                        @click.native="save">Delete
+                        @click.native="del">Delete
                     </v-btn>
                 </template>
             </v-card-actions>
@@ -28,10 +28,6 @@ export default {
         return {
         
         };
-    },
-    
-    methods   : {
-        
     },
 };
 </script>
