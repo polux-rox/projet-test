@@ -9,24 +9,18 @@ const store = {
         ],
     },
     mutations : {
-        addTask(state ,Name , NDate) {
-            const NewTask = {
-                name  : Name,
-                date  : NDate,
-            };
-            state.tasks.push(NewTask);
+        addTask(state, item) {
+            state.tasks.push(item);
         },
-
         delTask(state, item) {
             const index = this.task.indexOf(item);
             state.tasks.splice(index, 1);
         },
     },
     actions : {
-        save(context, name, date) {
-            context.commit('addTask', name, date);
+        save(context, item) {
+            context.commit('addTask', item);
         },
-
         create(context) {
 
         },
@@ -40,11 +34,10 @@ const store = {
     getters : {
         getTasks : state => state.tasks,
         getName(state, date) {
-            return state.task.filter(task => task.date === date);
+            return state.tasks.filter(task => task.date === date);
         },
-
         getDate(state, name) {
-            return state.task.filter(task => task.name === name);
+            return state.tasks.filter(task => task.name === name);
         },
     },
 };

@@ -73,9 +73,9 @@ export default {
     },
     methods   : {
         save() {
-            this.$store.dispatch('task/save', this.editedItem.name, this.editedItem.date);
-            console.log(this.editedItem.date);
-            console.log(this.$store.getters['task/getTask']);
+            this.$store.dispatch('task/save', this.editedItem);
+
+            console.log(this.$store.getters['task/getTasks']);
         },
     },
 };
