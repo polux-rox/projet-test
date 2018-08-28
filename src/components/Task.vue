@@ -84,8 +84,8 @@
 </template>
 
 <script>
-import PaDialog from '/mnt/c/Users/paul.poutet/dev/vuejs/monprojetVuejs/projet-test/src/components/common/Dialog.vue';
-import PaDelete from '/mnt/c/Users/paul.poutet/dev/vuejs/monprojetVuejs/projet-test/src/components/common/Delete.vue';
+import PaDialog from '../components/common/Dialog.vue';
+import PaDelete from '../components/common/Delete.vue';
 export default {
     name        : 'Task',
     components  : {

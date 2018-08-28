@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import task from '/mnt/c/Users/paul.poutet/dev/vuejs/monprojetVuejs/projet-test/src/components/Task.vue';
+import task from '../components/Task.vue';
 export default {
     name        : 'App',
     components  : {
