@@ -1,7 +1,7 @@
 const store = {
     namespaced  : true,
     state       : {
-        task    : [
+        tasks    : [
             {
                 name : 'GS',
                 date : '26/12/1997',
@@ -9,44 +9,40 @@ const store = {
         ],
     },
     mutations : {
-        add_task(state ,Name , NDate) {
+        addTask(state ,Name , NDate) {
             const NewTask = {
                 name  : Name,
                 date  : NDate,
             };
-            state.task.push(NewTask);
+            state.tasks.push(NewTask);
         },
 
-        del_task(state, item) {
+        delTask(state, item) {
             const index = this.task.indexOf(item);
-            state.task.splice(index, 1);
+            state.tasks.splice(index, 1);
         },
     },
     actions : {
         save(context, name, date) {
-            context.commit('add_task', name, date);
+            context.commit('addTask', name, date);
         },
 
         create(context) {
 
         },
         delete(context, item) {
-            context.commit('del_task', item);
+            context.commit('delTask', item);
         },
         setcurrent(context) {
 
         },
     },
     getters : {
-        getTask(state)  {
-            console.log(state.task.length);
-            return state.task;
-        },
-    
+        getTasks : state => state.tasks,
         getName(state, date) {
             return state.task.filter(task => task.date === date);
         },
-    
+
         getDate(state, name) {
             return state.task.filter(task => task.name === name);
         },

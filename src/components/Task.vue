@@ -1,14 +1,14 @@
 <template>
     <div>
-        <v-layout 
-            row 
+        <v-layout
+            row
             pb-2>
-            <v-flex 
-                xs8 
+            <v-flex
+                xs8
                 offset-xs2>
                 <v-card class="card--flex-toolbar">
-                    <v-toolbar 
-                        card 
+                    <v-toolbar
+                        card
                         prominent>
                         <v-toolbar-title>Test Paul</v-toolbar-title>
                         <v-spacer/>
@@ -23,9 +23,8 @@
                             @click="dialog=true">
                             <v-icon>add</v-icon>
                         </v-btn>
-                        <v-divider/>
                     </v-toolbar>
-                    <v-dialog 
+                    <v-dialog
                         v-model="dialog"
                         width="500">
                         <pa-dialog/>
@@ -39,26 +38,18 @@
                             slot="items">
                             <td>{{ props.item.name }}</td>
                             <td>{{ props.item.date }}</td>
-                            <td class="text-xs-center">
-                                <v-icon
-                                    @click="editItem(props.item)">
-                                    edit
-                                </v-icon>
-                                <v-icon
-                                    @click="del=true">
-                                    delete
-                                </v-icon>
-                            </td>
-                        </template>
-                        <template slot="footer">
-                            <v-spacer/>
-                            <td class="text-xs-left">
+                            <td class="text-xs-right px-2">
                                 <v-btn
-                                    color="warning"
-                                    dark
-                                    outline
-                                    @click="initialize">
-                                    Reset
+                                    icon
+                                    class="mx-0"
+                                    @click="editItem(props.item)">
+                                    <v-icon>edit</v-icon>
+                                </v-btn>
+                                <v-btn
+                                    icon
+                                    class="mx-0"
+                                    @click="del = true">
+                                    <v-icon>delete</v-icon>
                                 </v-btn>
                             </td>
                         </template>
@@ -72,8 +63,8 @@
                             </v-alert>
                         </template>
                     </v-data-table>
-                    <v-dialog 
-                        v-model="del" 
+                    <v-dialog
+                        v-model="del"
                         width="500">
                         <pa-delete/>
                     </v-dialog>
@@ -105,7 +96,7 @@ export default {
                     value     : 'name',
                 },
                 { text  : 'date', value : 'date' },
-                { text  : 'Actions', value  : 'name', sortable  : false },
+                { value  : 'name', sortable  : false, align : 'right' },
             ],
             tasks       : [],
             editedItem  : {
@@ -118,7 +109,7 @@ export default {
             },
         };
     },
-    
+
     watch   : {
         dialog(val) {
             val || this.closeDialog();
@@ -127,15 +118,15 @@ export default {
             val || this.closeDelete();
         },
     },
-    created() {
+    mounted() {
         // localStorage.clear();
-        this.initialize();
+        this.loadCollection();
     },
     methods   : {
-        initialize() {
-            console.log(this.$store.state.task.name);
-            if (this.$store.getters['task/getTask'].length > 0) {
-                this.tasks.push(this.$store.getters['task/getTask']);
+        loadCollection() {
+            const tasks = this.$store.getters['task/getTasks'];
+            if (tasks.length > 0) {
+                this.tasks = tasks;
             } else {
                 this.tasks = [];
             }
