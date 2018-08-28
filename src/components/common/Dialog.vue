@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-title>
-            <span text-xs-center>{{ formTitle }}</span>
+            <span>{{ formTitle }}</span>
         </v-card-title>
         <v-card-text>
             <v-flex>
@@ -29,8 +29,7 @@
             <v-spacer/>
             <v-btn
                 color="blue"
-                flat
-                @click.native="close">Cancel
+                flat>Cancel
             </v-btn>
             <v-btn
                 color="blue"
@@ -42,7 +41,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+// import { mapGetters, mapMutations } from 'vuex';
 export default {
     name : 'Dialog',
     data() {
@@ -55,7 +54,7 @@ export default {
                 name    : '',
                 date    : '',
             },
-            editedIndex : -1,
+            editedIndex : null,
         };
     },
     computed  : {
@@ -73,8 +72,10 @@ export default {
         },
     },
     methods   : {
-        close() {
-
+        save() {
+            this.$store.dispatch('task/save', this.editedItem.name, this.editedItem.date);
+            console.log(this.editedItem.date);
+            console.log(this.$store.getters['task/getTask']);
         },
     },
 };

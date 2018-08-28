@@ -96,8 +96,7 @@ export default {
         return {
             del           : false,
             dialog        : false,
-            date          : null,
-            dateFormatted : null,
+            current       : null,
             headers       : [
                 {
                     text      : 'Tâche',
@@ -108,9 +107,7 @@ export default {
                 { text  : 'date', value : 'date' },
                 { text  : 'Actions', value  : 'name', sortable  : false },
             ],
-            count       : 0,
             tasks       : [],
-            editedIndex : -1,
             editedItem  : {
                 name    : '',
                 date    : '',
@@ -121,6 +118,7 @@ export default {
             },
         };
     },
+    
     watch   : {
         dialog(val) {
             val || this.closeDialog();
@@ -135,16 +133,12 @@ export default {
     },
     methods   : {
         initialize() {
-            this.tasks = [
-                {
-                    name    : 'Mickel',
-                    date    : '22/08/2018',
-                },
-                {
-                    name    : 'Paul',
-                    date    : '25/08/2018',
-                },
-            ];
+            console.log(this.$store.state.task.name);
+            if (this.$store.getters['task/getTask'].length > 0) {
+                this.tasks.push(this.$store.getters['task/getTask']);
+            } else {
+                this.tasks = [];
+            }
         },
         editItem(item) {
             this.editedIndex = this.tasks.indexOf(item);

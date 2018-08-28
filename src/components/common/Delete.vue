@@ -26,7 +26,7 @@ export default {
     name        : 'Delete',
     data() {
         return {
-            cancel : false,
+        
         };
     },
     

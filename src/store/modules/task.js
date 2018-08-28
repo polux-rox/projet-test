@@ -3,6 +3,8 @@ const store = {
     state       : {
         task    : [
             {
+                name : 'GS',
+                date : '26/12/1997',
             },
         ],
     },
@@ -16,15 +18,28 @@ const store = {
         },
 
         del_task(state, item) {
-            const index = this.tasks.indexOf(item);
+            const index = this.task.indexOf(item);
             state.task.splice(index, 1);
         },
     },
     actions : {
+        save(context, name, date) {
+            context.commit('add_task', name, date);
+        },
 
+        create(context) {
+
+        },
+        delete(context, item) {
+            context.commit('del_task', item);
+        },
+        setcurrent(context) {
+
+        },
     },
     getters : {
         getTask(state)  {
+            console.log(state.task.length);
             return state.task;
         },
     
