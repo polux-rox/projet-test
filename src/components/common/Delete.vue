@@ -8,12 +8,12 @@
                     <v-btn
                         color="orange"
                         flat
-                        @click.native="close">Cancel
+                        @click.native="close()">Cancel
                     </v-btn>
                     <v-btn
                         color="orange"
                         flat
-                        @click.native="del">Delete
+                        @click.native="deleteTask()">Delete
                     </v-btn>
                 </template>
             </v-card-actions>
@@ -28,6 +28,15 @@ export default {
         return {
         
         };
+    },
+    methods : {
+        close() {
+            this.$emit('close');
+        },
+        deleteTask() {
+            this.$emit('delete');
+            this.$emit('close');
+        },
     },
 };
 </script>

@@ -27,7 +27,8 @@
                     <v-dialog
                         v-model="dialog"
                         width="500">
-                        <pa-dialog/>
+                        <pa-dialog
+                            @close="closeDialogAction()"/>
                     </v-dialog>
                     <v-data-table
                         :headers="headers"
@@ -42,13 +43,13 @@
                                 <v-btn
                                     icon
                                     class="mx-0"
-                                    @click="editItem(props.item)">
+                                    @click="editItemAction(props.item)">
                                     <v-icon>edit</v-icon>
                                 </v-btn>
                                 <v-btn
                                     icon
                                     class="mx-0"
-                                    @click="del = true">
+                                    @click="deleteItemAction(props.item)">
                                     <v-icon>delete</v-icon>
                                 </v-btn>
                             </td>
@@ -66,7 +67,9 @@
                     <v-dialog
                         v-model="del"
                         width="500">
-                        <pa-delete/>
+                        <pa-delete
+                            @delete="deleteAction()"
+                            @close="closeDelAction()"/>
                     </v-dialog>
                 </v-card>
             </v-flex>
@@ -87,7 +90,7 @@ export default {
         return {
             del           : false,
             dialog        : false,
-            current       : null,
+            currentItem   : null,
             headers       : [
                 {
                     text      : 'Tâche',
@@ -99,23 +102,16 @@ export default {
                 { value  : 'name', sortable  : false, align : 'right' },
             ],
             tasks       : [],
-            editedItem  : {
-                name    : '',
-                date    : '',
-            },
-            defaultItem : {
-                name    : '',
-                date    : '',
-            },
+            editedItem  : {},
         };
     },
 
     watch   : {
         dialog(val) {
-            val || this.closeDialog();
+            val || this.closeDelAction();
         },
         del(val) {
-            val || this.closeDelete();
+            val || this.closeDelAction();
         },
     },
     mounted() {
@@ -131,38 +127,27 @@ export default {
                 this.tasks = [];
             }
         },
-        editItem(item) {
+        editItemAction(item) {
             this.editedIndex = this.tasks.indexOf(item);
+            console.log(this.editedIndex);
             this.editedItem = Object.assign({}, item);
             this.dialog = true;
+            this.loadCollection();
         },
-        deleteItem(item) {
-            const index = this.tasks.indexOf(item);
+        deleteItemAction(item) {
+            this.currentItem = item;
+            console.log(this.currentItem);
             this.del = true;
-            // confirm('êtes-vous sûr de voloir supprimer cette item ?') && this.tasks.splice(index, 1);
         },
-        closeDialog() {
+        deleteAction() {
+            const index = this.tasks.indexOf(this.currentItem);
+            this.tasks.splice(index, 1);
+        },
+        closeDelAction() {
+            this.del = false;
+        },
+        closeDialogAction() {
             this.dialog = false;
-            setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem);
-                this.editedIndex = -1;
-            }, 300);
-        },
-        closeDelete() {
-
-        },
-        saveDialog() {
-            if (this.editedItem.date.length === 10) {
-                if (this.editedIndex > -1) {
-                    Object.assign(this.tasks[this.editedIndex], this.editedItem);
-                } else {
-                    this.tasks.push(this.editedItem);
-                }
-                this.closeDialog();
-            } else {
-                this.editedItem.date = '';
-                alert('Vous avez pas mis le bon format pour la date');
-            }
         },
     },
 };

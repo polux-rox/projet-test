@@ -56,12 +56,13 @@
             <v-spacer/>
             <v-btn
                 color="orange"
-                flat>Cancel
+                flat
+                @click.native="close()">Cancel
             </v-btn>
             <v-btn
                 color="orange"
                 flat
-                @click.native="save">Save
+                @click.native="save()">Save
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -75,29 +76,27 @@ export default {
             date        : null,
             menu        : false,
             editedItem  : {},
-            editedIndex : null,
+            formTitle   : 'New Task',
         };
     },
-    computed  : {
-        formTitle() {
-            if (this.editedIndex === -1) {
-                return 'New Task';
-            } else {
-                return 'Edit Task';
-            }
-        },
-    },
+    
     watch   : {
         dialog(val) {
             val || this.close();
         },
     },
     methods   : {
+        close() {
+            this.$emit('close');
+        },
         save() {
             if ((this.editedItem.name !== '') || (this.editedItem.date !== '')) {
-                this.$store.dispatch('task/save', this.editedItem);
+                console.log();
+                const index = this.$store.getters['task/getIndex', this.editedItem];
+                alert(index);
+                this.$store.dispatch('task/save', this.editedItem, index);
                 this.editedItem = {};
-                console.log(this.$store.getters['task/getTasks']);
+                this.$emit('close');
             }
         },
     },
