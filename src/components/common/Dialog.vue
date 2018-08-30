@@ -85,16 +85,15 @@ export default {
             val || this.close();
         },
     },
+     
     methods   : {
         close() {
             this.$emit('close');
         },
         save() {
             if ((this.editedItem.name !== '') || (this.editedItem.date !== '')) {
-                console.log();
-                const index = this.$store.getters['task/getIndex', this.editedItem];
-                alert(index);
-                this.$store.dispatch('task/save', this.editedItem, index);
+                // this.$store.dispatch('task/save', this.editedItem);
+                this.$emit('save');
                 this.editedItem = {};
                 this.$emit('close');
             }

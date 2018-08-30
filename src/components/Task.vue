@@ -28,7 +28,8 @@
                         v-model="dialog"
                         width="500">
                         <pa-dialog
-                            @close="closeDialogAction()"/>
+                            @close="closeDialogAction()"
+                            @save="saveAction()"/>
                     </v-dialog>
                     <v-data-table
                         :headers="headers"
@@ -102,7 +103,10 @@ export default {
                 { value  : 'name', sortable  : false, align : 'right' },
             ],
             tasks       : [],
-            editedItem  : {},
+            editedItem  : {
+                name    : '',
+                date    : '',
+            },
         };
     },
 
@@ -116,8 +120,8 @@ export default {
     },
     mounted() {
         // localStorage.clear();
-        this.loadCollection();
     },
+    
     methods   : {
         loadCollection() {
             const tasks = this.$store.getters['task/getTasks'];
@@ -127,16 +131,16 @@ export default {
                 this.tasks = [];
             }
         },
+        setCurrent(item) {
+            this.currentItem = item;
+        },
         editItemAction(item) {
-            this.editedIndex = this.tasks.indexOf(item);
-            console.log(this.editedIndex);
+            this.setCurrent(item);
             this.editedItem = Object.assign({}, item);
             this.dialog = true;
-            this.loadCollection();
         },
         deleteItemAction(item) {
-            this.currentItem = item;
-            console.log(this.currentItem);
+            this.setCurrent(item);
             this.del = true;
         },
         deleteAction() {
@@ -148,6 +152,15 @@ export default {
         },
         closeDialogAction() {
             this.dialog = false;
+        },
+        saveAction() {
+            const index = this.tasks.indexOf(this.currentItem);
+            alert(index);
+            if (index > -1) {
+                Object.assign(this.tasks[index], this.currentItem);
+            } else {
+                this.tasks.push(this.currentItem);
+            }
         },
     },
 };
