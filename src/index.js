@@ -2,7 +2,7 @@ import Vue from 'vue';
 import App from './pages/App.vue';
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
-import store from './store';
+import store from '../src/store/Store';
 
 Vue.use(Vuetify);
 

@@ -1,18 +1,21 @@
+import uuidv1 from 'uuid/v1';
+
 const store = {
-    namespaced  : true,
+    textspaced  : true,
     state       : {
-        index   : -1,
         tasks   : [
             {
-                name : 'Paul',
-                date : '1997-12-26',
+                id          : uuidv1(),
+                text        : 'Lorem Ipsum',
+                date        : new Date(),
+                isChecked   : false,
             },
         ],
     },
     mutations : {
         addTask(state, item) {
             this.state.index = state.tasks.indexOf(item);
-            alert(this.state.index);
+
             if (this.state.index > -1) {
                 Object.assign(state.tasks[this.state.index], item);
             } else {
@@ -21,16 +24,29 @@ const store = {
         },
     },
     actions : {
-        save(context, item) {
-            context.commit('addTask', item);
+        /**
+         * Add new task
+         * 
+         * @param {object}      context             Module Store context
+         * @param {object}      item                Item to create
+         * @param {string}      item.text           Task text (description, ...)
+         * @param {Date}        item.date           Due date of current task
+         */
+        create(context, item) {
+            context.commit('addTask', {
+                ...item,
+                id          : uuidv1(),
+                isChecked   : false,
+            });
         },
     },
     getters : {
+        getId    : (state, item) => state.tasks.filter(tasks => tasks.id === item.id),
         getIndex : (state, item) => state.tasks.indexOf(item),
         getTasks : state => state.tasks,
-        getTask  : (state, item) => state.tasks.filter(task => (task.name === item.name && task.date === item.date)),
-        getName  : (state, date) => state.tasks.filter(task => task.date === date),
-        getDate  : (state, name) => state.tasks.filter(task => task.name === name),
+        getTask  : (state, item) => state.tasks.filter(tasks => tasks.id === item.id),
+        gettext  : (state, date) => state.tasks.filter(tasks => tasks.date === date),
+        getDate  : (state, text) => state.tasks.filter(tasks => tasks.text === text),
     },
 };
 global.store = store;

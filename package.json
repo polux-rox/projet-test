@@ -20,6 +20,8 @@
     "object-assign": "4.1.1",
     "offline-plugin": "4.8.0",
     "promise-polyfill": "6.0.2",
+    "uuid": "^3.3.2",
+    "vue-uuid": "^1.0.0",
     "vuetify": "1.1.9",
     "vuex": "^2.5.0"
   },

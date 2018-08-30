@@ -81,6 +81,7 @@
 <script>
 import PaDialog from '../components/common/Dialog.vue';
 import PaDelete from '../components/common/Delete.vue';
+import uuid from 'uuid';
 export default {
     name        : 'Task',
     components  : {
@@ -103,10 +104,7 @@ export default {
                 { value  : 'name', sortable  : false, align : 'right' },
             ],
             tasks       : [],
-            editedItem  : {
-                name    : '',
-                date    : '',
-            },
+            editedItem  : {},
         };
     },
 
@@ -120,6 +118,7 @@ export default {
     },
     mounted() {
         // localStorage.clear();
+        this.loadCollection();
     },
     
     methods   : {
@@ -154,9 +153,10 @@ export default {
             this.dialog = false;
         },
         saveAction() {
-            const index = this.tasks.indexOf(this.currentItem);
-            alert(index);
-            if (index > -1) {
+            const id = this.$store.getters['task/getId', this.currentItem];
+            // a modifier car pas bon
+            const index = 0;
+            if (id) {
                 Object.assign(this.tasks[index], this.currentItem);
             } else {
                 this.tasks.push(this.currentItem);
